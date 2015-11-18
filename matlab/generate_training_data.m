@@ -1,7 +1,7 @@
 %% generate_training_data:
-function [labels, vectors] = generate_training_data(N, P)
+function [labels, samples] = generate_training_data(N, P)
     labels = generate_labels(P);
-    vectors = randn(P, N);
+    samples = randn(P, N);
 end
 
 %% generate_labels:
