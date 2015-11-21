@@ -2,6 +2,13 @@
 // #include "dot.h"
 #include <numeric>
 
+#include <algorithm>
+#include <iostream>
+#include <iterator>
+
+#include "../src/Energy_Above_Threshold.h"
+
+
 Rosenblatt_Algorithm_Result rosenblatt_algorithm(Dichotomy &dichotomy, size_t max_steps)
 {
     size_t dimension = dichotomy.samples[0].size();
@@ -35,7 +42,7 @@ Rosenblatt_Algorithm_Result rosenblatt_algorithm(Dichotomy &dichotomy, size_t ma
                 {
                     weights[weight_idx] += (desired_label * sample[weight_idx]) / dimension;
                 }
-                // bias += desired_label / dimension;
+                bias += desired_label / dimension;
 
                 found_error = true;
             }

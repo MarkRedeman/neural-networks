@@ -57,11 +57,24 @@ go_bandit([](){
             };
             Dichotomy dichotomy(labels, VECTORS_20_50);
 
-            size_t steps = 10;
+            size_t steps = 100; // 59
             Rosenblatt_Algorithm_Result result = rosenblatt_algorithm(dichotomy, steps);
 
             AssertThat(result.weights, HasLength(50));
             AssertThat(result, Fulfills(Energy_Above_Threshold(dichotomy)));
+        });
+
+        it("won't find a solution if the data set is not linear separable and will use all steps", [&](){
+            Dichotomy dichotomy(
+                {-1, 1, -1},
+                Dichotomy::Samples {{-1}, {0.5}, {1}}
+            );
+
+            size_t steps = 100;
+            Rosenblatt_Algorithm_Result result = rosenblatt_algorithm(dichotomy, steps);
+
+            AssertThat(result.weights, HasLength(1));
+            AssertThat(result, Is().Not().Fulfilling(Energy_Above_Threshold(dichotomy)));
         });
 
         it("won't find a solution if the data set is not linear separable and will use all steps", [&](){

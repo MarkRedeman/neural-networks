@@ -8,6 +8,7 @@
 #include <cmath>
 #include <ctime>
 #include <chrono>
+#include <algorithm>
 
 #include "create_training_data.h"
 #include "Dichotomy.h"
@@ -28,7 +29,7 @@ struct Run
 
 class Experiment
 {
-    std::vector<Run> runs;
+    std::vector<Run> d_runs;
 
     size_t dimension;
     double alpha;
@@ -37,39 +38,41 @@ class Experiment
     public:
         Experiment(size_t dimension_, double alpha_, size_t max_steps_)
         :
-            alpha(alpha_),
             dimension(dimension_),
-            max_steps(max_steps_),
-        {}
+            alpha(alpha_),
+            max_steps(max_steps_)
+        {};
 
         void run(size_t total_runs = 1)
         {
-            runs.reserve(total_runs + runs.size());
+            d_runs.reserve(total_runs + d_runs.size());
 
-            std::chrono::time_point<std::chrono::system_clock> start, end;
-            start = std::chrono::system_clock::now();
-
-            std::vector<int> total_steps;
-            size_t successions = 0;
-            size_t sample_size = ceil(alphas[idx] * dimension);
-
+            size_t sample_size = ceil(alpha * dimension);
             for (size_t run = 0; run < total_runs; ++run)
             {
                 Dichotomy dichotomy = create_training_data(dimension, sample_size);
                 Rosenblatt_Algorithm_Result result = rosenblatt_algorithm(dichotomy, max_steps);
 
                 Energy_Above_Threshold matcher(dichotomy);
-                runs.push_back(Run(matcher.Matches(result), result.steps));
+                bool success = matcher.Matches(result);
+
+                d_runs.push_back(
+                    Run(success, result.steps)
+                );
             }
 
-            end = std::chrono::system_clock::now();
-            std::chrono::duration<double> elapsed_seconds = end - start;
-            std::cout << "(" << (idx + 1) << " / " << alphas.size() << ", (alpha: " << alphas[idx] << ", sample size: " << sample_size << ") Elapsed time: " << elapsed_seconds.count() << ", Successions: " << successions << " / " << total_runs << '\n';
         }
 
         std::vector<Run> runs()
         {
-            return runs;
+            return d_runs;
+        }
+
+        size_t successions() const
+        {
+            return std::count_if(d_runs.begin(), d_runs.end(), [](auto run) {
+                return run.success == true;
+            });
         }
 
     friend std::ostream & operator<<(std::ostream & stm, Experiment const &);

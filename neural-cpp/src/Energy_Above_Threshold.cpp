@@ -16,18 +16,24 @@ Energy_Above_Threshold::Energy_Above_Threshold(Dichotomy &dichotomy_)
 bool Energy_Above_Threshold::Matches(Rosenblatt_Algorithm_Result const &result) const
 {
     size_t sample_size = dichotomy.labels.size();
-    bool below = false;
-
+    bool success = true;
     for (size_t idx = 0; idx < sample_size; ++idx)
     {
         auto sample = dichotomy.samples[idx];
         double label = dichotomy.labels[idx];
 
-        if (dot_product(result.weights, sample) * label >= 0)
-            below = true;
+        auto dot_result = std::inner_product(
+            result.weights.begin(),
+            result.weights.end(),
+            sample.begin(),
+            0
+        );
+
+        if ((dot_result + result.bias) * label <= 0)
+            success = false;
     }
 
-    return below;
+    return success;
 }
 
 std::ostream & operator<<(std::ostream & stm, Energy_Above_Threshold const &)
