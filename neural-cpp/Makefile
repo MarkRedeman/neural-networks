@@ -17,7 +17,7 @@ OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 SPECS   := $(shell find $(SPECDIR) -type f -name *.$(SRCEXT))
 SPEC_OBJECTS := $(patsubst $(SPECDIR)/%,$(BUILDDIR)/$(SPECDIR)/%,$(SPECS:.$(SRCEXT)=.o))
 
-CFLAGS  := -std=c++14 -g -MMD -Wall
+CFLAGS  := -std=c++14 -g -MMD -Wall -O3
 LIB     :=
 INC     := -I include
 

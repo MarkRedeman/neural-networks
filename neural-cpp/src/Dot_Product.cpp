@@ -1,6 +1,7 @@
 #include "Dot_Product.h"
 
-#include <numeric>
+// #include <numeric>
+#include <parallel/numeric>
 double dot_product(std::vector<double> left, std::vector<double> right)
 {
     return std::inner_product(

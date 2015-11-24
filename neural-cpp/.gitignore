@@ -9,3 +9,4 @@ logs/*
 build/*
 !build/.gitkeep
 include/mcbsp*
+*.log

@@ -22,12 +22,7 @@ bool Energy_Above_Threshold::Matches(Rosenblatt_Algorithm_Result const &result) 
         auto sample = dichotomy.samples[idx];
         double label = dichotomy.labels[idx];
 
-        auto dot_result = std::inner_product(
-            result.weights.begin(),
-            result.weights.end(),
-            sample.begin(),
-            0
-        );
+        auto dot_result = dot_product(result.weights, sample);
 
         if ((dot_result + result.bias) * label <= 0)
             success = false;

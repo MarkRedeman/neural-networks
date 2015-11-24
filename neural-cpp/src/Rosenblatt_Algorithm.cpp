@@ -1,13 +1,10 @@
 #include "Rosenblatt_Algorithm.h"
-// #include "dot.h"
+#include "Dot_Product.h"
 #include <numeric>
 
 #include <algorithm>
 #include <iostream>
 #include <iterator>
-
-#include "../src/Energy_Above_Threshold.h"
-
 
 Rosenblatt_Algorithm_Result rosenblatt_algorithm(Dichotomy &dichotomy, size_t max_steps)
 {
@@ -30,12 +27,8 @@ Rosenblatt_Algorithm_Result rosenblatt_algorithm(Dichotomy &dichotomy, size_t ma
 
             // check if the current sample has been correctly separated,
             // otherwise make a correction to the weights and bias
-            auto dot_result = std::inner_product(
-                weights.begin(),
-                weights.end(),
-                sample.begin(),
-                0
-            );
+            auto dot_result = dot_product(weights, sample);
+
             if ((dot_result + bias) * desired_label <= 0)
             {
                 for (size_t weight_idx = 0; weight_idx < weights.size(); ++weight_idx)
