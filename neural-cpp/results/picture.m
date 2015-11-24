@@ -17,7 +17,6 @@
 % close all;
 % clc;
 % figure
-median_iterations = median(iterations, 'omitnan');
 % confidence_interval = [median_iterations - q1; q3 - median_iterations]'
 % % confidence_interval(:, :, 1) = q1';
 % % confidence_interval(:, :, 2) = q3';
@@ -46,25 +45,34 @@ set( internal_fig,                         ...
     'ygrid',    'on'                       ...
  );
 
+old_iterations = iterations;
+median_iterations = median(iterations, 'omitnan');
+to_plot = ~ isnan(median_iterations);
+iterations = iterations(:, to_plot);
+median_iterations = median_iterations(to_plot);
+
+q1 = quantile(iterations, 0.25);
+q3 = quantile(iterations, 0.75);
+
 confidence_interval = [];
 confidence_interval(:, :, 2) = [median_iterations - q1; q3 - median_iterations]';
 confidence_interval(:, :, 1) = [median_iterations - min(iterations); max(iterations) - median_iterations]';
-[l, p_] = boundedline([results.alpha], repmat(median_iterations, 2, 1), ...
+[l, p_] = boundedline([results(to_plot).alpha], repmat(median_iterations, 2, 1), ...
         confidence_interval, 'cmap', lines(2), 'transparency', 0.05);
 
 set(p_(2), 'FaceAlpha', 0.9)
 set(p_(1), 'FaceAlpha', 0.25)
 hold  on;
 
-plot([results.alpha], q1, 'k:');
-plot([results.alpha], q3, 'k:');
+plot([results(to_plot).alpha], q1, 'k:');
+plot([results(to_plot).alpha], q3, 'k:');
 xlabel('$\alpha$');
 ylabel('Iterations');
 xlim([0.1, 3]);
 title(sprintf('N:= %d, max iterations: %d, total runs: %d', results(1).dimension, results(1).max_steps, results(1).total_runs));
 
-plot([results.alpha], min(iterations), 'k:');
-plot([results.alpha], max(iterations), 'k:');
+plot([results(to_plot).alpha], min(iterations), 'k:');
+plot([results(to_plot).alpha], max(iterations), 'k:');
 set(gca,'YScale','log');
 
 set( internal_fig,                                  ...
@@ -73,6 +81,9 @@ set( internal_fig,                                  ...
     'xgrid',    'on',                      ...
     'ygrid',    'on' ...
  );
+
+iterations = old_iterations;
+hold off;
 % plot([results.alpha], median(iterations, 'omitnan'), 'r');
 % hold on;
 % plot([results.alpha], upper_whisker, 'b--');

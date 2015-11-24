@@ -1,4 +1,4 @@
-file_to_analyze = 'v_3_experiment_10.log';
+file_to_analyze = 'v_3_experiment_100.log';
 
 data = importdata(file_to_analyze);
 results = struct( ...
