@@ -21,7 +21,7 @@ CFLAGS  := -std=c++14 -g -MMD -Wall -O3
 LIB     :=
 INC     := -I include
 
-all: lbm
+all: neural
 
 $(TARGET): $(OBJECTS)
 	@echo "Linking..."
@@ -35,7 +35,7 @@ $(BUILDDIR)/specs/%.o: $(SPECDIR)/%.$(SRCEXT)
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INC) -I lib/bandit -c -o $@ $<
 
-lbm: $(OBJECTS) build/main.o
+neural: $(OBJECTS) build/main.o
 	$(CC) $^ -o $(TARGETDIR)/$(TARGET) $(LIB)
 
 # Tests
