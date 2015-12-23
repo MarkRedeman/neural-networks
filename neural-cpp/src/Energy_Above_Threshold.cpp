@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <iostream>
 #include <iterator>
+#include <functional>
 
 Energy_Above_Threshold::Energy_Above_Threshold(Dichotomy &dichotomy_)
 :
@@ -15,6 +16,11 @@ Energy_Above_Threshold::Energy_Above_Threshold(Dichotomy &dichotomy_)
 
 bool Energy_Above_Threshold::Matches(Rosenblatt_Algorithm_Result const &result) const
 {
+    // we will first check that the weights are not just 0 since such a result wont be
+    // meaningful
+    if (weights_are_zero(result.weights))
+        return false;
+
     size_t sample_size = dichotomy.labels.size();
     bool success = true;
     for (size_t idx = 0; idx < sample_size; ++idx)
@@ -29,6 +35,15 @@ bool Energy_Above_Threshold::Matches(Rosenblatt_Algorithm_Result const &result) 
     }
 
     return success;
+}
+
+bool Energy_Above_Threshold::weights_are_zero(std::vector<double> const &weights) const
+{
+    return std::all_of(
+        weights.cbegin(),
+        weights.cend(),
+        [](double weight){ return weight == 0; }
+    );
 }
 
 std::ostream & operator<<(std::ostream & stm, Energy_Above_Threshold const &)
