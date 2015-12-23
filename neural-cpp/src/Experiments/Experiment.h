@@ -33,6 +33,8 @@ class Experiment
         std::vector<Run>::const_iterator begin() const;
         std::vector<Run>::const_iterator end() const;
 
+        std::ostream & info(std::ostream & stream) const;
+
     friend std::ostream & operator<<(std::ostream & stream, Experiment const &);
 };
 

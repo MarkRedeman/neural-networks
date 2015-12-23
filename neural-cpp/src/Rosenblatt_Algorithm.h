@@ -19,6 +19,7 @@ struct Rosenblatt_Algorithm_Result
     {}
 };
 
-Rosenblatt_Algorithm_Result rosenblatt_algorithm(Dichotomy &dichotomy, size_t max_steps = 500);
+Rosenblatt_Algorithm_Result rosenblatt_algorithm(Dichotomy &dichotomy, size_t max_steps = 500, double threshold = 0);
+
 
 #endif

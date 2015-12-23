@@ -49,6 +49,11 @@ std::vector<Run>::const_iterator Experiment::end() const
     return d_runs.end();
 }
 
+std::ostream & Experiment::info(std::ostream & stream) const
+{
+    return stream << "Dimension, Sample_size, Max_steps, Successions, Runs";
+}
+
 std::ostream & operator<<(std::ostream & stream, Experiment const & experiment)
 {
     stream << "{ Dimension: "   << experiment.dimension << ", "
