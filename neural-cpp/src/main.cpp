@@ -25,7 +25,7 @@ try
         2.10, 2.20, 2.30, 2.40, 2.50, 2.60, 2.70, 2.80, 2.90, 3.0,
          // 3.2, 3.4, 3.6, 3.8, 4.0
      };
-    std::vector<size_t> dimensions = {20, 5, 10, 15, 25, 50, 75, 100, 200};
+    std::vector<size_t> dimensions = {5, 10, 15, 20, 25, 50, 75, 100, 200};
 
     for (auto dimension : dimensions)
     {
