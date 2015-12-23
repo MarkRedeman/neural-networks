@@ -1,5 +1,5 @@
 %% plot_2d_linear_separations:
-function [] = plot_2d_linear_separations(fig, labels, samples, weights, bias)
+function [] = plot_2d_linear_separations(fig, labels, samples, weights, bias, teacher)
     limits = plotting_limits(samples);
     axis('equal');
     set( fig,                                  ...
@@ -14,10 +14,16 @@ function [] = plot_2d_linear_separations(fig, labels, samples, weights, bias)
     ylabel('x_2');
     hold on;
 
-    plot_samples(fig, labels, samples);
+    visualize.plot_samples(fig, labels, samples);
 
     origin = - bias * weights ./ norm(weights)^2;
     plot_line_normal_to(weights, origin, limits(1, :));
+
+    if (nargin == 6)
+        origin = - bias * teacher ./ norm(teacher)^2;
+        plot_line_normal_to(teacher, 0 * origin, limits(1, :), 'k:');
+        legend({'positive', 'negative', 'Weights', 'Teacher'}, 'Location', 'BestOutside');
+    end
 end
 
 %% plotting_limits:
@@ -42,12 +48,21 @@ function [limits] = plotting_limits(samples)
         min(limits(1, 1), - min_bound), max(limits(1, 2),  min_bound)
         min(limits(2, 1), - min_bound), max(limits(2, 2),  min_bound)
     ];
+
+    % Make it square
+    limits = [
+        min(limits(1, 1), limits(2, 1)), max(limits(1, 2), limits(2, 2))
+        min(limits(1, 1), limits(2, 1)), max(limits(1, 2), limits(2, 2))
+    ];
 end
 
 
 %% plot_line_normal_to:
-function [] = plot_line_normal_to(normal, origin, limits)
+function [] = plot_line_normal_to(normal, origin, limits, color)
+    if (nargin < 4)
+        color = 'r';
+    end
     d = -dot(origin, normal);
     f = @(x) - (normal(1) * x + d) / normal(2);
-    fplot(f, limits);
+    fplot(f, limits, color);
 end

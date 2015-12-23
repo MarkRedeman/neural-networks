@@ -1,9 +1,11 @@
 %% solve_2d_lin_sep:
-function [Simulation] = main()
+% Do an experiment to test that random data behaves according to the theory,
+% that is check find the odds of a random sample is linear separable
+function [Simulation] = ls_of_random_data()
     runs = 100; % n_d
-    max_steps = 2500;
+    max_steps = 250;
 
-    alphas = [0.01:0.01:0.1 0.2:0.1:4];
+    alphas = [0.05:0.01:0.1 0.5:0.1:4];
     Q_linear_separation = struct('N', [], 'alpha', [], 'Q', [], 'successions', [], 'Steps', [], 'Time', []);
     N = 10; % dimension
 
@@ -38,18 +40,7 @@ function [Simulation] = main()
         'Dimension', N          ...
     );
 
-    save(sprintf('simulation_%d', N), 'Simulation');
-end
-
-%% prepare_figure:
-function [fig] = prepare_figure()
-    fig = figure(1);
-    clf;
-    set(fig,                        ...
-        'NumberTitle', 'off',         ...
-        'Name',         mfilename,    ...
-        'MenuBar',      'none',       ...
-        'Color',        [1.0 1.0 1.0] );
+    save(sprintf('results/simulation_%d', N), 'Simulation');
 end
 
 %% assert_energy_aove_treshold:
