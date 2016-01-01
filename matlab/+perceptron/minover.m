@@ -1,5 +1,5 @@
 %% Minover
-function [weights, bias, should_stop] = minnover(samples, labels, weights, bias, threshold)
+function [weights, bias, should_stop] = minover(samples, labels, weights, bias, threshold)
     import perceptron.hebbian_learning_step;
     import perceptron.lowest_stability;
     should_stop = false;
@@ -16,7 +16,7 @@ function [weights, bias, should_stop] = minnover(samples, labels, weights, bias,
 
     previous_stability = stability + 1;
 
-    if abs(1 - new_weights'* weights / norm(weights) / norm(new_weights)) < 0.00001
+    if abs(1 - new_weights'* weights / norm(weights) / norm(new_weights)) < 1E-5 
         should_stop = true;
     end
     weights = new_weights;
