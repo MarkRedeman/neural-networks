@@ -20,7 +20,7 @@ function [weights, bias, steps, convergence] = rosenblatt_algorithm(labels, samp
     older_weights = zeros(1, dimension);
     old_weights = zeros(1, dimension);
 
-    iterate = @(weights, bias) algorithm(samples, labels, weights, bias, threshold);
+    iterate = @(weights, bias) rosenblatt(samples, labels, weights, bias, threshold);
     for steps = 1 : max_steps
         [weights, bias, should_stop] = iterate(weights, bias);
 
@@ -38,8 +38,7 @@ function [weights, bias, steps, convergence] = rosenblatt_algorithm(labels, samp
     end
 end
 
-
-function [weights, bias, should_stop] = algorithm(samples, labels, weights, bias, threshold)
+function [weights, bias, should_stop] = rosenblatt(samples, labels, weights, bias, threshold)
     % we will stop iterating once we've separated every sample
     should_stop = true;
     for idx = 1 : size(samples, 1)
@@ -49,9 +48,23 @@ function [weights, bias, should_stop] = algorithm(samples, labels, weights, bias
         % check if the current sample has been correctly separated,
         % otherwise make a correction to the weights and bias
         if ((dot(weights, sample) + bias) * label <= threshold)
+            [weights, bias] = hebbian_learning_step( ...
+                weights, ...
+                bias, ...
+                sample, ...
+                label, ...
+                size(samples, 2) ...
+            );
+
             weights = weights + label * sample / size(samples, 2);
             % bias = bias + label / size(samples, 2);
             should_stop = false;
         end
     end
+end
+
+%% hebbian_learning_step:
+function [weights, bias] = hebbian_learning_step(weights, bias, sample, label, N)
+    weights = weights + label * sample / N;
+    % bias = bias + label / N;
 end
