@@ -1,4 +1,4 @@
-classdef Rosenblatt_Perceptron_Algorithm_Test < matlab.unittest.TestCase
+classdef Minover_Perceptron_Algorithm_Test < matlab.unittest.TestCase
 
     methods(Test, TestTags={'Small'})
         %% test_it_finds_a_linear_separation_of_a_1_dimensional_data_set:
@@ -10,7 +10,7 @@ classdef Rosenblatt_Perceptron_Algorithm_Test < matlab.unittest.TestCase
             ];
 
             % for this set anything between -1 and 1 is correct
-            w = rosenblatt_algorithm(labels, samples);
+            w = minover_algorithm(labels, samples);
             assert(length(w) == 1);
             t.assert_energy_aove_treshold(w, labels, samples);
         end
@@ -24,28 +24,19 @@ classdef Rosenblatt_Perceptron_Algorithm_Test < matlab.unittest.TestCase
             ];
 
             % for this set anything between -1 and 1 is correct
-            w = rosenblatt_algorithm(labels, samples);
+            w = minover_algorithm(labels, samples);
             assert(length(w) == 2);
             t.assert_energy_aove_treshold(w, labels, samples);
         end
 
         %% test_finds_a_linear_separation_of_a_large_separable_2d_data_set:
         function test_finds_a_linear_separation_of_a_large_separable_2d_data_set(t)
-            labels = [-1, -1, -1, -1, -1, 1, 1, 1 1]';
-            samples = [
-                -2, -2
-                -1.3, -1
-                -1.7, -3
-                -1, -1.2
-                -0.5, 1
-                0.4, 1
-                0.3, -3
-                1.2, 4
-                2, 2
-            ];
+            teacher = ones(2, 1);
+            rng('default');
+            [labels, samples] = generate_training_data(teacher, 10);
 
             % for this set anything between -1 and 1 is correct
-            w = rosenblatt_algorithm(labels, samples);
+            w = minover_algorithm(labels, samples, 1E2);
             assert(length(w) == 2);
             t.assert_energy_aove_treshold(w, labels, samples);
         end
@@ -53,11 +44,14 @@ classdef Rosenblatt_Perceptron_Algorithm_Test < matlab.unittest.TestCase
 
         %% test_it_finds_a_linear_separation_of_a_high_dimensional_data_set:
         function test_finds_a_linear_separation_of_a_high_dimensional_data_set(t)
+            teacher = ones(50, 1);
             rng('default');
-            [labels, samples] = generate_training_data(50, 20);
+            [labels, samples] = generate_training_data(teacher, 20);
+
+            % [labels, samples] = generate_training_data(50, 20);
 
             % for this set anything between -1 and 1 is correct
-            w = rosenblatt_algorithm(labels, samples);
+            w = minover_algorithm(labels, samples, 1E2);
             assert(length(w) == 50);
             t.assert_energy_aove_treshold(w, labels, samples);
         end
@@ -76,7 +70,7 @@ classdef Rosenblatt_Perceptron_Algorithm_Test < matlab.unittest.TestCase
             ];
 
             % for this set anything between -1 and 1 is correct
-            [w, bias, steps] = rosenblatt_algorithm(labels, samples, 100);
+            [w, bias, steps] = minover_algorithm(labels, samples, 100);
             assert(length(w) == 2);
             assert(steps == 100);
 
