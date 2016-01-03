@@ -20,7 +20,8 @@ Dichotomy create_training_data(std::vector<double> teacher, int population_size)
 {
     auto samples = normally_distributed_samples(teacher.size(), population_size);
 
-    std::vector<int> labels(population_size);
+    std::vector<int> labels;
+    labels.reserve(population_size);
     for (auto sample : samples)
         labels.push_back(sign(dot_product(teacher, sample)));
 

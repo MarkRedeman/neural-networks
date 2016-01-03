@@ -1,5 +1,5 @@
 #ifndef INCLUDED_SIGN
-#include INCLUDED_SIGN
+#define INCLUDED_SIGN
 
 template <typename T>
 int sign(T val) {
