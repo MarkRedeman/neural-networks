@@ -8,6 +8,6 @@ double dot_product(std::vector<double> left, std::vector<double> right)
         left.begin(),
         left.end(),
         right.begin(),
-        0
+        0.0
     );
 }
