@@ -5,7 +5,7 @@
 
 struct Dichotomy
 {
-    using Samples = std::vector<std::vector<double>>;
+    using Samples = std::vector< std::vector<double> >;
 
     std::vector<int> labels;
     Samples samples;
