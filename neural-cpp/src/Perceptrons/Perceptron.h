@@ -98,7 +98,7 @@ void Perceptron<Derived>::hebbian_learning_step(Sample sample, double label)
   {
       d_weights[weight_idx] += (label * sample[weight_idx]) / N;
   }
-  d_bias += label / N;
+  // d_bias += label / N;
 }
 
 template <typename Derived>
