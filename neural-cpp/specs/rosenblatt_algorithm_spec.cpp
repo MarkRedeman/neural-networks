@@ -7,7 +7,6 @@ using namespace bandit;
 #include "../src/Dichotomy.h"
 #include "../src/Rosenblatt_Algorithm.h"
 #include "../src/Energy_Above_Threshold.h"
-#include "20_50_VECTORS.h"
 
 go_bandit([](){
     describe("The Rosenblatt Algorithm for finding a linear separation of a dichotomy", [&](){
@@ -55,6 +54,8 @@ go_bandit([](){
             std::vector<int> labels = {
                 1, 1,-1, 1, 1,-1,-1, 1, 1, 1,-1, 1, 1,-1, 1,-1,-1, 1, 1, 1
             };
+            // This include should be replaced
+            #include "20_50_VECTORS.h"
             Dichotomy dichotomy(labels, VECTORS_20_50);
 
             size_t steps = 100; // 59
