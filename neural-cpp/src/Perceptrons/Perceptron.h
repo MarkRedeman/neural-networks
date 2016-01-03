@@ -38,6 +38,7 @@ class Perceptron
 
  protected:
     size_t find_minimal_stability_index() const;
+    double stability(size_t idx) const;
     void hebbian_learning_step(Sample sample, double label);
 };
 
@@ -112,10 +113,15 @@ template <typename Derived>
 double Perceptron<Derived>::minimal_stability() const
 {
   size_t idx = find_minimal_stability_index();
+  return stability(idx);
+}
 
-  auto sample = d_dichotomy.samples[idx];
-  auto label = d_dichotomy.labels[idx];
-  return dot_product(d_weights, sample) * label / norm(d_weights);
+template <typename Derived>
+double Perceptron<Derived>::stability(size_t idx) const
+{
+    auto sample = d_dichotomy.samples[idx];
+    auto label = d_dichotomy.labels[idx];
+    return dot_product(d_weights, sample) * label / norm(d_weights);
 }
 
 template <typename Derived>
