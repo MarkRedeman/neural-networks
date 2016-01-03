@@ -15,14 +15,16 @@ function [] = plot_2d_linear_separations(fig, labels, samples, weights, bias, te
     hold on;
 
     visualize.plot_samples(fig, labels, samples);
-
-    origin = - bias * weights ./ norm(weights)^2;
-    plot_line_normal_to(weights, origin, limits(1, :));
-
+weights
+    % If a teacher or other weight has been provided we will also plot that one
+    for idx = 1 : size(weights, 1)
+        origin = - bias * weights(idx, :) ./ norm(weights(idx, :))^2;
+        plot_line_normal_to(weights(idx, :), origin, limits(1, :));
+    end
     if (nargin == 6)
         origin = - bias * teacher ./ norm(teacher)^2;
-        plot_line_normal_to(teacher, 0 * origin, limits(1, :), 'k:');
-        legend({'positive', 'negative', 'Weights', 'Teacher'}, 'Location', 'BestOutside');
+        plot_line_normal_to(teacher, 0 * origin, limits(1, :));
+        % legend({'positive', 'negative', 'Weights', 'Teacher'}, 'Location', 'BestOutside');
     end
 end
 
@@ -58,11 +60,8 @@ end
 
 
 %% plot_line_normal_to:
-function [] = plot_line_normal_to(normal, origin, limits, color)
-    if (nargin < 4)
-        color = 'r';
-    end
+function [] = plot_line_normal_to(normal, origin, limits)
     d = -dot(origin, normal);
     f = @(x) - (normal(1) * x + d) / normal(2);
-    fplot(f, limits, color);
+    fplot(f, limits);
 end
