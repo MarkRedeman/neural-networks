@@ -10,6 +10,7 @@ void Rosenblatt::train(Dichotomy &dichotomy)
 {
   // we will stop iterating once we've separated every sample
   size_t sample_size = dichotomy.samples.size();
+  d_should_stop = true;
 
   for (size_t idx = 0; idx < sample_size; ++idx)
     {
