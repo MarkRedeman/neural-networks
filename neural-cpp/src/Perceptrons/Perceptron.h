@@ -106,7 +106,7 @@ template <typename Derived>
 double Perceptron<Derived>::generalization_error(Sample teacher) const
 {
   return acos(dot_product(teacher, d_weights)
-              / (norm(teacher) * norm(d_weights))) / PI;
+              / (norm(teacher) * (norm(d_weights)) + d_bias * d_bias)) / PI;
 }
 
 template <typename Derived>
@@ -121,7 +121,7 @@ double Perceptron<Derived>::stability(size_t idx) const
 {
     auto sample = d_dichotomy.samples[idx];
     auto label = d_dichotomy.labels[idx];
-    return dot_product(d_weights, sample) * label / norm(d_weights);
+    return dot_product(d_weights, sample) * label / (norm(d_weights) + d_bias * d_bias);
 }
 
 template <typename Derived>
@@ -137,7 +137,7 @@ size_t Perceptron<Derived>::find_minimal_stability_index() const
   {
       auto sample = d_dichotomy.samples[idx];
       auto label = d_dichotomy.labels[idx];
-      double stability = dot_product(d_weights, sample) * label;
+      double stability = (dot_product(d_weights, sample) + d_bias) * label;
       stabilities.push_back(stability);
   }
 
