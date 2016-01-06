@@ -70,7 +70,7 @@ inline void Perceptron<Derived>::compute_weights(size_t max_steps)
 template <typename Derived>
 inline int Perceptron<Derived>::predict(Sample & sample) const
 {
-  return sign(dot_product(d_weights, sample));
+  return sign(dot_product(d_weights, sample) + d_bias);
 }
 
 template <typename Derived>

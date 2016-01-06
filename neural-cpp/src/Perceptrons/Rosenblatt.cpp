@@ -13,7 +13,7 @@ void Rosenblatt::train(Dichotomy &dichotomy)
   d_should_stop = true;
 
   for (size_t idx = 0; idx < sample_size; ++idx)
-    {
+  {
       auto sample = dichotomy.samples[idx];
       auto desired_label = dichotomy.labels[idx];
 
@@ -22,11 +22,11 @@ void Rosenblatt::train(Dichotomy &dichotomy)
       auto dot_result = dot_product(d_weights, sample);
 
       if ((dot_result + d_bias) * desired_label - d_threshold <= 0)
-        {
+      {
           hebbian_learning_step(sample, desired_label);
           d_should_stop = false;
-        }
-    }
+      }
+  }
 }
 
 bool Rosenblatt::converged() const
