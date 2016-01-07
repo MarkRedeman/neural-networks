@@ -5,16 +5,17 @@ import gradient.gradient_descent;
 N = 50;
 
 % Training size
-P = 2500;
+P = 500;
+Q = 500;
 
 % Input size
 M = length(labels);
 
 % Iterate tmax times over the training set
-tmax = 20;
+tmax = 50;
 
 % Learning rate
-eta = 0.05;
+eta = 0.01;
 
 % Permute input
 permutation = randperm(M);
@@ -23,7 +24,8 @@ permutedData = samples(permutation, :);
 permutedLabels = labels(permutation);
 
 % Start learning
-[W, trainingError, setError] = gradient_descent(permutedData, permutedLabels, P, eta, tmax);
+[W, trainingError, setError] = gradient_descent(permutedData, permutedLabels, ...
+                                                P, Q, eta, tmax);
 
 figure;
 plot(trainingError)
