@@ -1,5 +1,5 @@
 %% assignement_3
-function [W, trainingError, setError] = assignement_3(samples, labels)
+function [W, stats] = assignement_3(samples, labels)
 import gradient.gradient_descent;
 % Input dimension
 N = 50;
@@ -8,14 +8,14 @@ N = 50;
 P = 500;
 Q = 4500;
 
-P = 500;
+P = 100;
 Q = 500;
 
 % Input size
 M = length(labels);
 
 % Iterate tmax times over the training set
-t_max = 50000;
+t_max = 5000;
 
 % Learning rate
 eta = 0.001;
@@ -39,7 +39,7 @@ testing = training_size + 1 : min(length(labels), training_size + 1 + testing_si
 training_set = struct('samples', samples(training, :), 'labels', labels(training));
 testing_set = struct('samples', samples(testing, :), 'labels', labels(testing));
 
-% [W, stats] = gradient_descent(weights, training_set, testing_set, eta, t_max);
-gradient_descent(weights, training_set, testing_set, eta, t_max);
+[W, stats] = gradient_descent(weights, training_set, testing_set, eta, t_max);
+% gradient_descent(weights, training_set, testing_set, eta, t_max);
 
 end

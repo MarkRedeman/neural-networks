@@ -2,9 +2,9 @@
 %% neural network
 function [weights, stats] = gradient_descent(weights, training_set, testing_set,learning_rate, ...
                                                       t_max)
-    if (nargout == 2)
-       stats = struct('training_set', [], 'testing_set', [], 'learning_rate', ...
-                      [], 't_max', [], 't', [], 'initial_weights', [], ...
+    if (nargout >= 2)
+       stats = struct('training_set', training_set, 'testing_set', testing_set, 'learning_rate', ...
+                      learning_rate, 't_max', t_max, 'initial_weights', weights, ...
                       'final_weights', []);
     end
 
@@ -18,6 +18,7 @@ function [weights, stats] = gradient_descent(weights, training_set, testing_set,
     testing_size = length(testing_set.labels);
 
     if (nargout == 0)
+        import gradient.cost_function;
         initialize_plots(weights);
     end
 
@@ -40,31 +41,23 @@ function [weights, stats] = gradient_descent(weights, training_set, testing_set,
             plot_costs(cost_of_training, cost_of_test, learning_rate, ...
                    training_size, testing_size, t, norms(:, 1 : t_i), weights);
         end
+        
+        if (mod(t, t_max * training_size / 10) == 1)
+            fprintf('Progress: %d%%\n', ceil(t * 100 / (t_max * training_size)));
+        end
+    end
+    
+    if (nargout >= 2)
+        stats.final_weights = weights;
     end
 end
 
 %% jacobian: The jacobian to be used
 function [jac] = jacobian(sample, label, weights)
+    import gradient.sigma;
     difference = sigma(sample, weights) - label;
     
     jac = difference * (1 - tanh(weights * sample').^2) * sample;
-end
-
-%% sigma
-%sigma is compatible with multiple weights (adaptive input-to-hidden weights)
-% sample: P x N, where P is the sample size 
-% weights: A x N, where A is the number of adaptive weights
-% output: sigma : 1 x 10, sigma value for each sample 
-function [sigma] = sigma(sample, weights)
-    % sum over the collumns
-    sigma = sum(tanh(weights * sample'), 1);
-end
-
-%% Cost function: computes E
-function [E] = cost_function(samples, labels, weights)
-   sample_size = length(labels);
-   
-   E = sum((sigma(samples, weights) - labels').^2) / (sample_size * 2);
 end
 
 
