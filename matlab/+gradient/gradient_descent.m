@@ -61,26 +61,44 @@ function [weights, stats] = gradient_descent(weights, training_set, testing_set,
     if (should_plot_costs)
         t = training_size * t_max;
         t_i = ceil(t / training_size); 
-        cost_of_training(t_i) = cost_function(training_set.samples, ...
-                            training_set.labels, weights);
-        cost_of_test(t_i) = cost_function(testing_set.samples, ...
-                        testing_set.labels, weights);
+        cost_of_training(t_i) = compute_costs(weights, training_set);
+        cost_of_test(t_i) = compute_costs(weights, testing_set);
         plot_costs(cost_of_training, cost_of_test, learning_rate, ...
-           training_size, testing_size, t, norms(:, 1 : t_i), weights);
+           training_size, testing_size, t, norms(:, 1 : t_i), hessians, weights);
     end
 end
 
 %% jacobian: The jacobian to be used
-function [jac] = jacobian(sample, label, weights)
+function [jac, hessian] = jacobian(sample, label, weights)
     import gradient.sigma;
-    difference = sigma(sample, weights) - label;
+    [sigma_, dot_tanh] = sigma(sample, weights);
     
-    jac = difference * (1 - tanh(weights * sample').^2) * sample;
+    difference = sigma_ - label;
+    
+    jac = difference * (1 - dot_tanh.^2) * sample;
+    hessian = hessian_lambda(dot_tanh, difference);
 end
 
+%% Hessian: computes the maximal eigenvalue of the hessian matrix
+% We will assume that this is called by the jacobian function
+function [hessian] = hessian_lambda(dot_tanh, error)
+    
+    coeff = (1 - dot_tanh.^2) .* ( ...
+        (1 - dot_tanh.^2) + error .* (2 * dot_tanh) ...
+    );
+    
+    hessian = 50 * coeff;
+    
+    % hessian = kron(sample, sample') * coeff;
+end
+
+function [costs] = compute_costs(weights, set)
+        import gradient.cost_function;
+    costs = cost_function(set.samples, set.labels, weights);
+end
 
 function [handle] = plot_costs(cost_of_training, cost_of_test, learning_rate, training_size, ...
-                    testing_size, t, norms, weights)
+                    testing_size, t, norms, hessians, weights)
     subplot(2, 2, 1);
     plot(cost_of_training)
     plot(cost_of_test)
