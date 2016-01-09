@@ -1,7 +1,14 @@
 %% gradient_descent: iteration function used to update the weights of a
 %% neural network
 function [weights, stats] = gradient_descent(weights, training_set, testing_set,learning_rate, ...
-                                                      t_max)
+                                                      t_max, should_plot_costs)
+        import gradient.cost_function;
+    if (nargin <= 5)
+       should_plot_costs = false; 
+    end
+    if (nargout == 0)
+        should_plot_costs = true;
+    end
     if (nargout >= 2)
        stats = struct('training_set', training_set, 'testing_set', testing_set, 'learning_rate', ...
                       learning_rate, 't_max', t_max, 'initial_weights', weights, ...
@@ -17,8 +24,7 @@ function [weights, stats] = gradient_descent(weights, training_set, testing_set,
     training_size = length(training_set.labels);
     testing_size = length(testing_set.labels);
 
-    if (nargout == 0)
-        import gradient.cost_function;
+    if (should_plot_costs)
         initialize_plots(weights);
     end
 
@@ -30,7 +36,7 @@ function [weights, stats] = gradient_descent(weights, training_set, testing_set,
                                                      weights);
             
         % Update the costs after (training_size) learning steps have been done 
-        if (nargout == 0 && mod(t, training_size) == 1)
+        if (should_plot_costs && mod(t, training_size) == 1)
             t_i = ceil(t / training_size); 
             cost_of_training(t_i) = cost_function(training_set.samples, ...
                                 training_set.labels, weights);
@@ -38,8 +44,10 @@ function [weights, stats] = gradient_descent(weights, training_set, testing_set,
                             testing_set.labels, weights);
             norms(:, t_i) = min(weights, [], 2) + max(weights, [], 2);
 
-            plot_costs(cost_of_training, cost_of_test, learning_rate, ...
+            if (mod(t, training_size * 100) == 1)
+                plot_costs(cost_of_training, cost_of_test, learning_rate, ...
                    training_size, testing_size, t, norms(:, 1 : t_i), weights);
+            end
         end
         
         if (mod(t, t_max * training_size / 10) == 1)
@@ -49,6 +57,16 @@ function [weights, stats] = gradient_descent(weights, training_set, testing_set,
     
     if (nargout >= 2)
         stats.final_weights = weights;
+    end
+    if (should_plot_costs)
+        t = training_size * t_max;
+        t_i = ceil(t / training_size); 
+        cost_of_training(t_i) = cost_function(training_set.samples, ...
+                            training_set.labels, weights);
+        cost_of_test(t_i) = cost_function(testing_set.samples, ...
+                        testing_set.labels, weights);
+        plot_costs(cost_of_training, cost_of_test, learning_rate, ...
+           training_size, testing_size, t, norms(:, 1 : t_i), weights);
     end
 end
 
@@ -68,6 +86,7 @@ function [handle] = plot_costs(cost_of_training, cost_of_test, learning_rate, tr
     plot(cost_of_test)
     title(sprintf('eta: %f, P: %d, Q: %d, t: %d', learning_rate, training_size, ...
               testing_size, t));
+    legend('training cost', 'test cost');
     
     subplot(2, 2, 2);
     for idx = 1 : size(norms, 1)
