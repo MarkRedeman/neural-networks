@@ -15,10 +15,10 @@ Q = 500;
 M = length(labels);
 
 % Iterate tmax times over the training set
-t_max = 500000;
+t_max = 50000;
 
 % Learning rate
-eta = 0.01;
+eta = 0.001;
 % eta = 0.05;
 
 % Permute input
@@ -27,21 +27,19 @@ permutation = randperm(M);
 permutedData = samples(permutation, :);
 permutedLabels = labels(permutation);
 
-hidden_nodes = 1;
-weights = normc(rand(hidden_nodes, N)); 
+hidden_nodes = 2;
+weights = normr(rand(hidden_nodes, N));
+weights(1, :) = - weights(2, :);
 % Start learning
-[W, trainingError, setError] = gradient_descent(weights, permutedData, permutedLabels, ...
-                                                P, Q, eta, t_max);
+training_size = P;
+testing_size = Q;
+training = 1 : training_size;
+testing = training_size + 1 : min(length(labels), training_size + 1 + testing_size);
 
-figure;
-plot(trainingError)
-hold on
-plot(setError,'r')
-hold off
-set(gca, 'yscale', 'log')
-legend('training cost', 'test cost');
-title(sprintf('eta: %f, P: %d, Q: %d, t: %d', eta, P, Q, t_max));
+training_set = struct('samples', samples(training, :), 'labels', labels(training));
+testing_set = struct('samples', samples(testing, :), 'labels', labels(testing));
 
-figure
-bar3(W);
+% [W, stats] = gradient_descent(weights, training_set, testing_set, eta, t_max);
+gradient_descent(weights, training_set, testing_set, eta, t_max);
+
 end
