@@ -21,9 +21,9 @@ AlphaExperiment::AlphaExperiment(size_t dimension_, size_t max_steps_, size_t ma
 void AlphaExperiment::run(std::vector<double> alphas)
 {
     std::stringstream filename;
-    filename << "results/v_4_experiment_" << dimension << ".log";
+    filename << "results/v_5_experiment_" << dimension << ".log";
     std::ofstream output_file;
-
+    // Experiment::info(output_file);
     for (auto alpha : alphas)
     {
         std::chrono::time_point<std::chrono::system_clock> start, end;
